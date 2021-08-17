@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>guss word game</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+    <script type="text/javascript" src="eel.js"></script>
+    <style>
+        .myClass{
+            width:150px;
+        }
+    </style>
+</head>
+<body> <!--=oncontextmenu="return false" onselectstart="return false" ondragstart="return false">-->
+
+
+        <div class="cell-6 offset-3">
+            <h1 style="font-family:'Comic Sans MS' ; color:#6960EC;"><u><b>guss the word :)</b></u></h1>
+        </div>
+        <div class="row offset-4"><br><br>
+            <button id="start" onclick="start_game()" class="button shadowed">Start Game</button>
+        </div>
+        <div class="row offset-3"><br><br></div>
+        <div class="row offset-4">
+            <input type="text" data-role="materialinput" placeholder="insert character" class="myClass" id="usr_char" maxlength="1">
+            <button id="insert" class="button shadowed" onclick="guss()" autocomplete="off">Guss</button>
+        </div>
+        <div class="row offset-3"><br><br></div>
+        <div class="grid offset-3">
+            <div class="row">
+                <div class="cell" id="ch0" style="font-size:30px"><div></div></div>
+                <div class="cell" id="ch1" style="font-size:30px"><div></div></div>
+                <div class="cell" id="ch2" style="font-size:30px"><div></div></div>
+                <div class="cell" id="ch3" style="font-size:30px"><div></div></div>
+                <div class="cell" id="ch4" style="font-size:30px"><div></div></div>
+                <div class="cell" id="ch5" style="font-size:30px"><div></div></div>
+                <div class="cell" id="ch6" style="font-size:30px"><div></div></div>
+                <div class="cell" id="ch7" style="font-size:30px"><div></div></div>
+            </div>
+        </div>
+        <div class="grid offset-3">
+            <div class="row" >
+                <div class="cell" id="under1" style="font-size:30px"><div></div></div>
+                <div class="cell" id="under2" style="font-size:30px"><div></div></div>
+                <div class="cell" id="under3" style="font-size:30px"><div></div></div>
+                <div class="cell" id="under4" style="font-size:30px"><div></div></div>
+                <div class="cell" id="under5" style="font-size:30px"><div></div></div>
+                <div class="cell" id="under6" style="font-size:30px"><div></div></div>
+                <div class="cell" id="under7" style="font-size:30px"><div></div></div>
+                <div class="cell" id="under8" style="font-size:30px"><div></div></div>
+            </div>
+        </div>
+        <div class="grid offset-2">
+            <div class="row" >
+                <h3 id="result" class="border bd-cyan border-radius-4 bg-teal font-family:'Courier New'"></h3>
+            </div>
+        </div>
+
+    </div>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+    <script>
+
+        async function start_game(){
+            clear_lines(); // clear lines before get new word
+            clear_letters() // clear letters before get new word
+            $("#result").html(''); // clear result message
+            let line = await  eel.start_game()(function(line){
+                // print lines as number of random word length
+                for(let i = 1 ; i<= parseInt(line); i++){
+                    $("#under"+String(i)).html('￣');
+                }
+            });
+        }
+        // clear line after start game
+        function clear_lines(){
+            for(let i = 1 ; i<= 8; i++){
+               $("#under"+String(i)).html('');
+            }
+        }
+        // clear letters after start game
+        function clear_letters(){
+            for(let i = 0 ; i<= 7; i++){
+               $("#ch"+String(i)).html('');
+            }
+        }
+
+        function guss(){
+           var char = $("#usr_char").val(); // get char from input field
+           var index = eel.guss_char(char)(function(index){
+           // lose condition
+           if (index <= -1){
+                clear_letters();
+                clear_lines();
+                $("#result").html('You Lose, dont worry --> click start to play again');
+           }
+           // win condition
+           if (index == 30){
+                clear_letters();
+                clear_lines();
+                $("#result").html('You Win, Great Job --> click start to play again');
+           }
+           // print correct letter above correct place
+           for(let i = 0 ; i<= index.length; i++){
+                    $("#ch"+String(index[i])).html(char);
+                }
+           });
+        }
+    </script>
+</body>
+</html>
